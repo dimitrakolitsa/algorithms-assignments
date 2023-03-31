@@ -6,79 +6,58 @@ A = [
     "Giannis",
     "Giannis",
     "Dimitra",
-    "Giannis",
-    "Giannis",
-    "Giannis",
-    "Giannis",
-    "Giannis",
-    "Giannis",
-    "Giannis",
-    "Giannis",
-    "Giannis",
+    "Dimitra",
+    "Dimitra",
 ]
 
 
-def mergeSort(arr):
-    if len(arr) > 1:
-        mid = len(arr) // 2
-        left_half = arr[:mid]
-        right_half = arr[mid:]
+def pollCountLog(A):
+    if len(A) == 1:
+        return A[0]
 
-        mergeSort(left_half)
-        mergeSort(right_half)
+    left = A[: len(A) // 2]
+    right = A[len(A) // 2 :]
 
-        i = j = k = 0
+    leftMost = pollCountLog(left)
+    rightMost = pollCountLog(right)
 
-        while i < len(left_half) and j < len(right_half):
-            if left_half[i] < right_half[j]:
-                arr[k] = left_half[i]
-                i += 1
-            else:
-                arr[k] = right_half[j]
-                j += 1
-            k += 1
+    if leftMost == rightMost:
+        return leftMost
 
-        while i < len(left_half):
-            arr[k] = left_half[i]
-            i += 1
-            k += 1
+    leftCandidate = countMost(A, leftMost)
+    rightCandidate = countMost(A, rightMost)
 
-        while j < len(right_half):
-            arr[k] = right_half[j]
-            j += 1
-            k += 1
+    if countTotal(A, leftCandidate) > len(A) / 2:
+        return leftCandidate
+    elif countTotal(A, rightCandidate) > len(A) / 2:
+        return rightCandidate
+
+    return None
 
 
-def pollCount(A):
-    mergeSort(A)
-    # print(A)
-    counter = [0] * len(A)
-    maxCounter = 0
-    mostVoted = ""
-    j = 0
-
-    for i in range(len(A)):
-        if i == 0:
-            counter[j] += 1
-            if counter[j] > maxCounter:
-                maxCounter = counter[j]
-                mostVoted = A[i]
-
-        elif A[i] == A[i - 1]:
-            counter[j] += 1
-            if counter[j] > maxCounter:
-                maxCounter = counter[j]
-                mostVoted = A[i]
-
+def countMost(A, candidate):
+    count = 0
+    for i in A:
+        if i == candidate:
+            count += 1
         else:
-            counter[j + 1] += 1
-            j += 1
-
-    if maxCounter > (len(A) / 2):
-        print("The following candidate has more than 50% of the votes:")
-        print(mostVoted)
+            count -= 1
+    if count > 0:
+        return candidate
     else:
-        print("No candidate has more than 50% of the votes")
+        return None
 
 
-pollCount(A)
+def countTotal(A, candidate):
+    count = 0
+    for i in A:
+        if i == candidate:
+            count += 1
+    return count
+
+
+winner = pollCountLog(A)
+if winner is not None:
+    print("The following candidate has more than 50% of the votes:", winner)
+else:
+    print("No candidate has more than 50% of the votes")
