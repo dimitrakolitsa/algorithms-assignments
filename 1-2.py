@@ -28,12 +28,15 @@ def pollCountLog(A):
     leftCandidate = countMost(A, leftMost)
     rightCandidate = countMost(A, rightMost)
 
-    if countTotal(A, leftCandidate) > len(A) / 2:
-        return leftCandidate
-    elif countTotal(A, rightCandidate) > len(A) / 2:
-        return rightCandidate
+    if leftCandidate != None:
+        mostVotedCandidate = leftCandidate
+    else:
+        mostVotedCandidate = rightCandidate
 
-    return None
+    if countTotal(A, mostVotedCandidate) > len(A) / 2:
+        return mostVotedCandidate
+    else:
+        return None
 
 
 def countMost(A, candidate):
